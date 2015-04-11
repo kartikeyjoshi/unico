@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 class RestController {
 
-    static allowedMethods = [index: 'GET', push: "GET", list: 'GET']
+    static allowedMethods = [index: 'GET', push: "POST", list: 'GET']
 
     def jmsService
 
@@ -13,8 +13,8 @@ class RestController {
     }
 
     def push() {
-        jmsService.send(queue: 'jmsInputQueue', 2)
-        jmsService.send(queue: 'jmsInputQueue', 4)
+        jmsService.send(queue: 'jmsInputQueue', params.i1)
+        jmsService.send(queue: 'jmsInputQueue', params.i2)
         render response.status
     }
 
