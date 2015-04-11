@@ -78,6 +78,7 @@ grails.project.dependency.resolution = {
         runtime ":jquery:1.11.1"
 
         compile ":jms:1.3"
+        compile ":cxf:2.0.1"
 
 
         // Uncomment these to enable additional asset-pipeline capabilities
