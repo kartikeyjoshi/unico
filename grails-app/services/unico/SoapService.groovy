@@ -1,18 +1,27 @@
-package com.unico
+package unico
 
-import grails.transaction.Transactional
+import org.grails.cxf.utils.EndpointType
 
-@Transactional
 class SoapService {
-
+    static expose = [EndpointType.SIMPLE]
+    static excludes = []
     def jmsService
+
+    String serviceMethod(String s) {
+        return s.toString()
+    }
 
     List<Integer> listInputQueue() {
         return jmsService.browse('jmsInputQueue')
     }
 
-    List<Integer> listGCDQueue() {
+    List<Integer> gcdList() {
         return jmsService.browse('jmsGCDQueue')
+    }
+
+    int gcdSum() {
+        List<Integer> list = jmsService.browse('jmsGCDQueue')
+        return list.sum()
     }
 
     int gcd() {
@@ -25,6 +34,8 @@ class SoapService {
             i2 = i1 % i2; // % is remainder
             i1 = temp;
         }
+        resetHead()
+        jmsService.send('jmsGCDQueue', i1)
         return i1;
     }
 
