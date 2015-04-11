@@ -37,7 +37,7 @@ grails.project.dependency.resolution = {
 
         grailsPlugins()
         grailsHome()
-        mavenLocal()
+//        mavenLocal()
         grailsCentral()
         mavenCentral()
         // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
@@ -51,6 +51,16 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.29'
         // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
+        compile('org.apache.activemq:activemq-core:5.3.0',
+                'org.apache.activemq:activeio-core:3.1.2',
+                'org.apache.xbean:xbean-spring:3.7') {
+            excludes 'activemq-openwire-generator'
+            excludes 'commons-logging'
+            excludes 'xalan'
+            excludes 'xml-apis'
+            exported = false
+        }
+
     }
 
     plugins {
@@ -66,6 +76,9 @@ grails.project.dependency.resolution = {
         runtime ":hibernate4:4.3.5.5" // or ":hibernate:3.6.10.17"
         runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.1"
+
+        compile ":jms:1.3"
+
 
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:1.9.0"
