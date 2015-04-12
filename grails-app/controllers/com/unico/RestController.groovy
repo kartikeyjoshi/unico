@@ -13,9 +13,10 @@ class RestController {
     }
 
     def push() {
-        jmsService.send(queue: 'jmsInputQueue', params.i1)
-        jmsService.send(queue: 'jmsInputQueue', params.i2)
-        render response.status
+        jmsService.send(queue: 'jmsInputQueue', params.i1 as Integer)
+        jmsService.send(queue: 'jmsInputQueue', params.i2 as Integer)
+        String responseStatus = response.status
+        render responseStatus
     }
 
     def list() {

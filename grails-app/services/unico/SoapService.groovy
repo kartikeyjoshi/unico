@@ -15,41 +15,61 @@ class SoapService {
 
     @WebMethod
     List<Integer> gcdList() {
-        List<Integer> list = jmsService.browse('jmsGCDQueue')
-        return list
+        return jmsService.browse('jmsGCDQueue')
     }
 
     @WebMethod
-    int gcdSum() {
+    Integer gcdSum() {
         List<Integer> list = jmsService.browse('jmsGCDQueue')
-        return list.sum()
+        return list.sum() as Integer
     }
 
     @WebMethod
-    int gcd() {
+    Integer gcd() {
+        Integer head = findOrCreateHead()
+        Integer gcd = fetchElementsFromInputQueueAndCalculateGCD(head)
+        jmsService.send('jmsGCDQueue', gcd)
+        return gcd
+    }
+
+    Integer findOrCreateHead() {
+        List headQueue = jmsService.browse('jmsHeadQueue')
+        Integer head = 0
+        if (!headQueue) {
+            jmsService.send('jmsHeadQueue', 0)
+        } else {
+            head = headQueue.last() as Integer
+        }
+        return head
+    }
+
+    Integer fetchElementsFromInputQueueAndCalculateGCD(Integer head) {
+        Integer gcd = 0
         List<Integer> list = inputList()
-        int i1 = list[0] as int
-        int i2 = list[1] as int
+        Integer newHead = head + 2
+        Integer maxLimit = list.size()
 
+        if (list && newHead <= maxLimit) {
+            gcd = calculateGCD(list[head] as Integer, list[head + 1] as Integer)
+            updateHead(newHead)
+        }
+        return gcd
+    }
+
+    Integer calculateGCD(Integer i1, Integer i2) {
         while (i2 > 0) {
             long temp = i2;
-            i2 = i1 % i2; // % is remainder
+            i2 = i1 % i2;
             i1 = temp;
         }
-        resetHead()
-        jmsService.send('jmsGCDQueue', i1)
         return i1;
     }
 
-    def resetHead() {
-        Integer size = inputList().size()
-        for (int i = 0; i < size - 2; i++) {
-            jmsService.browse('jmsInputQueue')[i] = jmsService.browse('jmsInputQueue')[i + 2];
-        }
+    void updateHead(Integer newHead) {
+        jmsService.send('jmsHeadQueue', newHead)
     }
 
     List<Integer> inputList() {
         return jmsService.browse('jmsInputQueue')
     }
-
 }
