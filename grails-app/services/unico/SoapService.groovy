@@ -2,32 +2,34 @@ package unico
 
 import org.grails.cxf.utils.EndpointType
 
+import javax.jws.WebMethod
+
 class SoapService {
-    static expose = [EndpointType.SIMPLE]
-    static excludes = []
+
+    static expose = ['cxfjax']
     def jmsService
 
     String serviceMethod(String s) {
         return s.toString()
     }
 
-    List<Integer> listInputQueue() {
-        return jmsService.browse('jmsInputQueue')
-    }
-
+    @WebMethod
     List<Integer> gcdList() {
-        return jmsService.browse('jmsGCDQueue')
+        List<Integer> list = jmsService.browse('jmsGCDQueue')
+        return list
     }
 
+    @WebMethod
     int gcdSum() {
         List<Integer> list = jmsService.browse('jmsGCDQueue')
         return list.sum()
     }
 
+    @WebMethod
     int gcd() {
-        List<Integer> list = listInputQueue()
-        int i1 = list[0]
-        int i2 = list[1]
+        List<Integer> list = inputList()
+        int i1 = list[0] as int
+        int i2 = list[1] as int
 
         while (i2 > 0) {
             long temp = i2;
@@ -40,9 +42,14 @@ class SoapService {
     }
 
     def resetHead() {
-        Integer size = listInputQueue().size()
+        Integer size = inputList().size()
         for (int i = 0; i < size - 2; i++) {
             jmsService.browse('jmsInputQueue')[i] = jmsService.browse('jmsInputQueue')[i + 2];
         }
     }
+
+    List<Integer> inputList() {
+        return jmsService.browse('jmsInputQueue')
+    }
+
 }
