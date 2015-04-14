@@ -28,7 +28,6 @@ class SoapService {
     Integer gcd() {
         Integer head = findOrCreateHead()
         Integer gcd = fetchElementsFromInputQueueAndCalculateGCD(head)
-        jmsService.send('jmsGCDQueue', gcd)
         return gcd
     }
 
@@ -51,6 +50,7 @@ class SoapService {
 
         if (list && newHead <= maxLimit) {
             gcd = calculateGCD(list[head] as Integer, list[head + 1] as Integer)
+            jmsService.send('jmsGCDQueue', gcd)
             updateHead(newHead)
         }
         return gcd

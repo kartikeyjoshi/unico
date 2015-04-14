@@ -79,3 +79,8 @@ Exposed Endpoints
           The method responds with the sum of all 'jmsGCDQueue' values in a SOAP based response
 
 
+-------------------------------------------------------------------------------------------------------
+
+Create EAR:
+
+grails EAR (creates the .ear file in /target folder)
