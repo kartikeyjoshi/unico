@@ -8,7 +8,7 @@ Application Configurations
 
 1. Grails Specifications
 
-    version = '2.4.3'
+    version = '2.4.5'
 
 2. Tomcat Specifications
 
